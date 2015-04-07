@@ -38,7 +38,11 @@ byte chargen[][19] = {
   {1,1,1,0,0,1,1,1,0,0,0,0,0,1,1,0,0,0,0},   // 2
   {1,1,1,0,0,0,1,1,1,0,0,0,0,1,1,0,0,0,1},   // 3
   {1,0,0,0,1,0,1,0,1,0,0,0,0,1,1,1,1,1,0},   // 4
-  {1,1,0,0,1,1,1,1,0,0,1,1,0,1,0,0,1,1,1}};  // 5
+  {1,1,0,0,1,1,1,1,0,0,1,1,0,1,0,0,1,0,1},   // 5
+  {1,1,0,0,1,1,1,1,0,0,1,1,0,1,0,0,1,0,1},   // 6
+  {1,1,0,0,1,1,1,1,0,0,1,1,0,1,0,0,1,0,1},   // 7
+  {1,1,0,0,1,1,1,1,0,0,1,1,0,1,0,0,1,0,1},   // 8
+  {1,1,0,0,1,1,1,1,0,0,1,1,0,1,0,0,1,0,1}};  // 9
 
 int ring = 0;  // initial ring
 int mode = 0;  // Mode represents the demo program running
@@ -373,6 +377,7 @@ void bugChase()
   boolean success = false;
   unsigned long timeNow = millis();
   showBugPlayer(bug, player, bugCol, playerCol, coverCol);
+  int delays = 800;
   while (true)
   {
     while (true)
@@ -396,7 +401,7 @@ void bugChase()
       }
       if (bug == player)  // collided?
         break;  // fail
-      if (millis() - timeNow > 800 - level * 200)
+      if (millis() - timeNow > delays)
       {
         bug = moveBug(bug, player);
         timeNow = millis();
@@ -409,14 +414,35 @@ void bugChase()
     {
       ray(100, playerCol, 5);
       level++;
-      if (level==1)
-        coverCol = CRGB(30,30,0);
-      else if (level==2)
-        coverCol = CRGB(30,0,30);
-      else if (level==3)
-        coverCol = CRGB(0,30,30);
-      else
-        coverCol = CRGB(30,30,30);
+      delays = (delays * 3) / 4; // 
+      switch (level)
+      {
+        case 1:
+          coverCol = CRGB(0,30,0);
+          break;
+        case 2:
+          coverCol = CRGB(0,0,30);
+          break;
+        case 3:
+          coverCol = CRGB(30,30,0);
+          break;
+        case 4:
+          coverCol = CRGB(30,0,30);
+          break;
+        case 5:
+          coverCol = CRGB(0,30,30);
+          break;
+        case 6:
+          coverCol = CRGB(30,30,30);
+          break;
+        default:
+          coverCol = CRGB(15,45,62);
+          break;
+      }
+      FastLED.setBrightness(255);     //
+      displayDigit(level+1, coverCol);
+      FastLED.setBrightness(MAXBRIGHT);     //
+      delay(1000);
       bug = 18;
       player = 1;
       clearCovers();
