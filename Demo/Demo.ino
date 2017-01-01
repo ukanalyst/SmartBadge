@@ -11,7 +11,9 @@
 //    
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-#include "FastSPI_LED2.h"
+#include "FastLED.h"
+
+//#include "FastSPI_LED2.h"
 
 // Define number of LEDs on the SmartBadge
 #define NUM_LEDS 19
