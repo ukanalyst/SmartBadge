@@ -80,6 +80,7 @@ int last4 = HIGH;
 void setup() {
   // sanity check delay - allows reprogramming if accidently blowing power w/leds
   delay(2000);
+  randomSeed(analogRead(0));
   pinMode(SW1, INPUT);
   digitalWrite(SW1, HIGH);    // pullup resistors required for switches
   pinMode(SW2, INPUT);
@@ -134,9 +135,30 @@ void loop() {
     displayMessage("HAPPY NEW YEAR 2017", true, CRGB::Blue, 500);
     delay(1000);
     allOff();
+  } else if (testButton4()) {
+    randomLEDs();
   }
 }
 
+void randomLEDs()
+{
+  do {
+    allOff();
+    int randLEDs = random(1,19);
+    int randWait = random(1,100);
+    int randBright = random(1,50);
+    for (int i = 1; i <= randLEDs; i++) {
+      int randLED = random(0,18);
+      int randHue = random(1,360);
+      leds[randLED] = CHSV(randHue, 255, 255);
+    }
+    FastLED.setBrightness(randBright);
+    FastLED.show();
+    delay(randWait);
+    allOff();    
+  } while(!testButton1() && !testButton2() && !testButton3() && !testButton4());
+  FastLED.setBrightness(MAXBRIGHT);     // Reset Brightness
+}
 
 void displaySymbol(char symbol, boolean rainbow, CRGB col)
 {
